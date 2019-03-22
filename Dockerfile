@@ -1,7 +1,9 @@
 FROM alpine
 
-RUN wget https://github.com/vaddy/go-vaddy/archive/v1.0.3.tar.gz
-RUN tar zxvf v1.0.3.tar.gz
-RUN mv go-vaddy-1.0.3/bin/vaddy-linux-64bit /usr/local/bin/vaddy
+WORKDIR /tmp/go-vaddy
+
+RUN wget https://github.com/vaddy/go-vaddy/archive/master.zip
+RUN unzip master.zip
+RUN mv go-vaddy-master/bin/vaddy-linux-64bit /usr/local/bin/vaddy
 
 CMD ["vaddy"]
