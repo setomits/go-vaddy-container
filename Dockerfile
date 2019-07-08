@@ -1,15 +1,21 @@
-FROM alpine
+FROM python:3-alpine
 
-WORKDIR /tmp/go-vaddy
+ARG tmp_dir="/tmp/go-vaddy"
+ARG vaddy_version="1.0.6"
 
-RUN wget --no-verbose https://github.com/vaddy/go-vaddy/archive/v1.0.6.zip
-RUN unzip v1.0.6.zip
-RUN mv go-vaddy-1.0.6/bin/vaddy-linux-64bit /usr/local/bin/vaddy
+WORKDIR ${tmp_dir}
+
+RUN set -ex \
+    && apk add --no-cache --update ca-certificates \
+    && wget --quiet https://github.com/vaddy/go-vaddy/archive/v${vaddy_version}.zip \
+    && unzip v${vaddy_version}.zip \
+    && mv go-vaddy-${vaddy_version}/bin/vaddy-linux-64bit /usr/local/bin/vaddy \
+    && pip install awscli
 
 WORKDIR /
 
-RUN rm -rf /tmp/go-vaddy
-
-RUN apk add --no-cache --update ca-certificates
+RUN set -ex \
+    && rm -rf ${tmp_dir} \
+	&& rm -rf /root/.cache/pip
 
 CMD ["vaddy"]
